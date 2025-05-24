@@ -908,8 +908,8 @@
         scene.add(mesh);
         function animate() {
           requestAnimationFrame(animate);
-          mesh.rotation.x += 0.01;
-          mesh.rotation.y += 0.01;
+          mesh.rotation.x += 0.005;
+          mesh.rotation.y += 0.005;
           renderer.render(scene, camera);
         }
         animate();
@@ -942,11 +942,25 @@
      }
      shape.closePath();
      return new THREE.ExtrudeGeometry(shape, { depth: depth, bevelEnabled: false });
+   function createPhoneGeometry(width = 0.7, height = 1.2, radius = 0.2, depth = 0.25) {
+     const w = width, h = height, r = radius;
+     const shape = new THREE.Shape();
+     shape.moveTo(-w/2 + r, -h/2);
+     shape.lineTo(w/2 - r, -h/2);
+     shape.quadraticCurveTo(w/2, -h/2, w/2, -h/2 + r);
+     shape.lineTo(w/2, h/2 - r);
+     shape.quadraticCurveTo(w/2, h/2, w/2 - r, h/2);
+     shape.lineTo(-w/2 + r, h/2);
+     shape.quadraticCurveTo(-w/2, h/2, -w/2, h/2 - r);
+     shape.lineTo(-w/2, -h/2 + r);
+     shape.quadraticCurveTo(-w/2, -h/2, -w/2 + r, -h/2);
+     return new THREE.ExtrudeGeometry(shape, { depth: depth, bevelEnabled: false });
+   }
    }
 
    createIcon('icon-linkedin', new THREE.BoxGeometry(1, 1, 1),                       0x0a66c2);
    createIcon('icon-email',   createEnvelopeGeometry(),                              0xffaa00);
-   createIcon('icon-phone',   new THREE.TorusGeometry(0.55, 0.15, 16, 100, Math.PI), 0x4caf50);
+   createIcon('icon-phone',   createPhoneGeometry(), 0x4caf50);
    createIcon('icon-project', createStarGeometry(),                                 0x9c27b0);
 
       function createEnvelopeGeometry() {
@@ -979,7 +993,7 @@
 
       createIcon('icon-linkedin', new THREE.BoxGeometry(1, 1, 1), 0x0a66c2);
       createIcon('icon-email',   createEnvelopeGeometry(),   0xffaa00);
-      createIcon('icon-phone',   new THREE.TorusGeometry(0.55, 0.15, 16, 100, Math.PI), 0x4caf50);
+      createIcon('icon-phone',   createPhoneGeometry(), 0x4caf50);
       createIcon('icon-project', createStarGeometry(),       0x9c27b0);
    // --- Three.js Icons ---
    function createEnvelopeGeometry() {
@@ -1012,7 +1026,7 @@
 
    createIcon('icon-linkedin', new THREE.BoxGeometry(1, 1, 1),                       0x0a66c2);
    createIcon('icon-email',   createEnvelopeGeometry(),                              0xffaa00);
-   createIcon('icon-phone',   new THREE.TorusGeometry(0.55, 0.15, 16, 100, Math.PI), 0x4caf50);
+   createIcon('icon-phone',   createPhoneGeometry(), 0x4caf50);
    createIcon('icon-project', createStarGeometry(),                                 0x9c27b0);
 
       
