@@ -873,9 +873,6 @@
       }
       
       // Create the main visualization
-      createVisualization('three-container');
-      
-      // Create the main visualization
       console.log('Attempting to create main visualization');
       const mainViz = createVisualization('three-container');
       
@@ -918,10 +915,40 @@
         animate();
       }
 
+      // --- Three.js Icons ---
+      function createEnvelopeGeometry() {
+        const shape = new THREE.Shape();
+        shape.moveTo(-1, -0.6);
+        shape.lineTo(1, -0.6);
+        shape.lineTo(1, 0.2);
+        shape.lineTo(0, 0.8);
+        shape.lineTo(-1, 0.2);
+        shape.lineTo(-1, -0.6);
+        return new THREE.ExtrudeGeometry(shape, { depth: 0.2, bevelEnabled: false });
+      }
+
+      function createStarGeometry(radius = 0.8, depth = 0.25) {
+        const shape = new THREE.Shape();
+        for (let i = 0; i < 5; i++) {
+          const outerAngle = (i / 5) * Math.PI * 2;
+          const innerAngle = outerAngle + Math.PI / 5;
+          const outerX = Math.cos(outerAngle) * radius;
+          const outerY = Math.sin(outerAngle) * radius;
+          const innerX = Math.cos(innerAngle) * radius * 0.5;
+          const innerY = Math.sin(innerAngle) * radius * 0.5;
+          if (i === 0) shape.moveTo(outerX, outerY);
+          else shape.lineTo(outerX, outerY);
+          shape.lineTo(innerX, innerY);
+        }
+        shape.closePath();
+        return new THREE.ExtrudeGeometry(shape, { depth: depth, bevelEnabled: false });
+      }
+
       createIcon('icon-linkedin', new THREE.BoxGeometry(1, 1, 1), 0x0a66c2);
-      createIcon('icon-email', new THREE.ConeGeometry(0.8, 1.2, 4), 0xffaa00);
-      createIcon('icon-phone', new THREE.CylinderGeometry(0.5, 0.5, 1.2, 32), 0x4caf50);
-      createIcon('icon-project', new THREE.TorusKnotGeometry(0.4, 0.15, 100, 16), 0x9c27b0);
+      createIcon('icon-email',   createEnvelopeGeometry(),   0xffaa00);
+      createIcon('icon-phone',   new THREE.TorusGeometry(0.55, 0.15, 16, 100, Math.PI), 0x4caf50);
+      createIcon('icon-project', createStarGeometry(),       0x9c27b0);
+
       
       console.log('Visualizations created:', 
         mainViz ? 'Main visualization success' : 'Main visualization failed', 
