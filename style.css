@@ -28,17 +28,18 @@
 
 /* Light mode colors */
 [data-theme="light"] {
+  /* Refreshed day theme colors */
   --primary-color: #ffffff;
-  --secondary-color: #0056a4;
-  --accent-color: #b78c30;
-  --text-color: #1a2633;
-  --muted-text: #4e5e6f;
-  --background-color: #f0f2f5;
+  --secondary-color: #006dd2;
+  --accent-color: #ffa726;
+  --text-color: #102a43;
+  --muted-text: #6e7891;
+  --background-color: #fdfdfd;
   --card-background: #ffffff;
-  --card-shadow: 0 8px 32px rgba(0, 86, 164, 0.1);
-  --border-color: #d8e1e9;
-  --gradient-primary: linear-gradient(135deg, #0056a4, #b78c30);
-  --gradient-dark: linear-gradient(135deg, #f0f2f5, #ffffff);
+  --card-shadow: 0 4px 20px rgba(0, 109, 210, 0.08);
+  --border-color: #e2e8f0;
+  --gradient-primary: linear-gradient(135deg, #006dd2, #ffa726);
+  --gradient-dark: linear-gradient(135deg, #fdfdfd, #ffffff);
 }
 
 * {
