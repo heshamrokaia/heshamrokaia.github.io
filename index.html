@@ -889,7 +889,7 @@
       });
 
       // --- Three.js Icons ---
-      function createIcon(canvasId, geometry, color) {
+      function createIcon(canvasId, geometry, color, options = {}) {
         const canvas = document.getElementById(canvasId);
         if (!canvas) return;
         const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
@@ -903,13 +903,28 @@
         const light = new THREE.DirectionalLight(0xffffff, 0.8);
         light.position.set(2, 2, 2);
         scene.add(light);
-        const material = new THREE.MeshStandardMaterial({ color: color });
+
+        let material;
+        if (options.texture) {
+          const loader = new THREE.TextureLoader();
+          const texture = loader.load(options.texture);
+          material = new THREE.MeshBasicMaterial({
+            map: texture,
+            transparent: true,
+            side: THREE.DoubleSide
+          });
+        } else {
+          material = new THREE.MeshStandardMaterial({ color: color });
+        }
+
         const mesh = new THREE.Mesh(geometry, material);
         scene.add(mesh);
+        const speed = options.rotationSpeed !== undefined ? options.rotationSpeed : 0.01;
+
         function animate() {
           requestAnimationFrame(animate);
-          mesh.rotation.x += 0.01;
-          mesh.rotation.y += 0.01;
+          mesh.rotation.x += speed;
+          mesh.rotation.y += speed;
           renderer.render(scene, camera);
         }
         animate();
@@ -944,7 +959,7 @@
      return new THREE.ExtrudeGeometry(shape, { depth: depth, bevelEnabled: false });
    }
 
-   createIcon('icon-linkedin', new THREE.BoxGeometry(1, 1, 1),                       0x0a66c2);
+   createIcon('icon-linkedin', new THREE.PlaneGeometry(1, 1), null, { texture: 'linkedin.svg', rotationSpeed: 0.003 });
    createIcon('icon-email',   createEnvelopeGeometry(),                              0xffaa00);
    createIcon('icon-phone',   new THREE.TorusGeometry(0.55, 0.15, 16, 100, Math.PI), 0x4caf50);
    createIcon('icon-project', createStarGeometry(),                                 0x9c27b0);
@@ -977,7 +992,7 @@
         return new THREE.ExtrudeGeometry(shape, { depth: depth, bevelEnabled: false });
       }
 
-      createIcon('icon-linkedin', new THREE.BoxGeometry(1, 1, 1), 0x0a66c2);
+      createIcon('icon-linkedin', new THREE.PlaneGeometry(1, 1), null, { texture: 'linkedin.svg', rotationSpeed: 0.003 });
       createIcon('icon-email',   createEnvelopeGeometry(),   0xffaa00);
       createIcon('icon-phone',   new THREE.TorusGeometry(0.55, 0.15, 16, 100, Math.PI), 0x4caf50);
       createIcon('icon-project', createStarGeometry(),       0x9c27b0);
@@ -1010,7 +1025,7 @@
      return new THREE.ExtrudeGeometry(shape, { depth: depth, bevelEnabled: false });
    }
 
-   createIcon('icon-linkedin', new THREE.BoxGeometry(1, 1, 1),                       0x0a66c2);
+   createIcon('icon-linkedin', new THREE.PlaneGeometry(1, 1), null, { texture: 'linkedin.svg', rotationSpeed: 0.003 });
    createIcon('icon-email',   createEnvelopeGeometry(),                              0xffaa00);
    createIcon('icon-phone',   new THREE.TorusGeometry(0.55, 0.15, 16, 100, Math.PI), 0x4caf50);
    createIcon('icon-project', createStarGeometry(),                                 0x9c27b0);
