@@ -659,6 +659,21 @@ canvas {
   max-height: 400px;
 }
 
+/* Ensure the 3D visualization canvas fits its container */
+#about-3d-visualization canvas {
+  height: 100% !important;
+  width: 100% !important;
+  max-height: none;
+}
+
+/* Ensure main 3D visualization canvas fits its container */
+#three-container canvas {
+  height: 100% !important;
+  width: 100% !important;
+  max-height: none;
+  display: block;
+}
+
 /* Experience Section */
 .timeline-container {
   position: relative;
