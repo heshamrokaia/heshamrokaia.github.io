@@ -578,6 +578,13 @@ section {
   border-radius: 16px;
 }
 
+.skill-icon img.skill-image {
+  width: 60%;
+  height: 60%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
 .skill-title {
   margin-bottom: 1rem;
   font-weight: 700;
@@ -607,12 +614,12 @@ section {
   color: #000;
 }
 
-.project-link i {
+.project-link .arrow {
   margin-left: 0.5rem;
   transition: transform 0.3s ease;
 }
 
-.project-link:hover i {
+.project-link:hover .arrow {
   transform: translateX(4px);
 }
 
