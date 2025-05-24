@@ -44,10 +44,18 @@
           <h1>Hesham (Sam) Abourokaia</h1>
           <p class="header-description">Transforming complex data into clear business insights that drive strategic decisions and deliver measurable results.</p>
           <div class="social-icons">
-            <a href="https://linkedin.com/in/heshamabourokaia" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
-            <a href="mailto:hesham.abourokaia@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
-            <a href="tel:xxxxxxx781" aria-label="Phone"><i class="fas fa-phone"></i></a>
-            <a href="#projects" aria-label="View Projects"><i class="fas fa-project-diagram"></i></a>
+            <a href="https://linkedin.com/in/heshamabourokaia" target="_blank" aria-label="LinkedIn">
+              <canvas id="icon-linkedin" class="three-icon" width="50" height="50"></canvas>
+            </a>
+            <a href="mailto:hesham.abourokaia@gmail.com" aria-label="Email">
+              <canvas id="icon-email" class="three-icon" width="50" height="50"></canvas>
+            </a>
+            <a href="tel:xxxxxxx781" aria-label="Phone">
+              <canvas id="icon-phone" class="three-icon" width="50" height="50"></canvas>
+            </a>
+            <a href="#projects" aria-label="View Projects">
+              <canvas id="icon-project" class="three-icon" width="50" height="50"></canvas>
+            </a>
           </div>
         </div>
         <div class="profile-container slide-in-right active">
@@ -882,6 +890,38 @@
         particleCount: 300,
         fogDensity: 0.06
       });
+
+      // --- Three.js Icons ---
+      function createIcon(canvasId, geometry, color) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+        const width = canvas.clientWidth;
+        const height = canvas.clientHeight;
+        renderer.setSize(width, height);
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+        camera.position.z = 3;
+        scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+        const light = new THREE.DirectionalLight(0xffffff, 0.8);
+        light.position.set(2, 2, 2);
+        scene.add(light);
+        const material = new THREE.MeshStandardMaterial({ color: color });
+        const mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+        function animate() {
+          requestAnimationFrame(animate);
+          mesh.rotation.x += 0.01;
+          mesh.rotation.y += 0.01;
+          renderer.render(scene, camera);
+        }
+        animate();
+      }
+
+      createIcon('icon-linkedin', new THREE.BoxGeometry(1, 1, 1), 0x0a66c2);
+      createIcon('icon-email', new THREE.ConeGeometry(0.8, 1.2, 4), 0xffaa00);
+      createIcon('icon-phone', new THREE.CylinderGeometry(0.5, 0.5, 1.2, 32), 0x4caf50);
+      createIcon('icon-project', new THREE.TorusKnotGeometry(0.4, 0.15, 100, 16), 0x9c27b0);
       
       console.log('Visualizations created:', 
         mainViz ? 'Main visualization success' : 'Main visualization failed', 
