@@ -115,7 +115,12 @@ themeToggle?.addEventListener('click', () => {
 // Initialize Three.js 3D Enhanced Business Metrics Visualization
 function initialize3DVisualization() {
   const threeContainer = document.getElementById('about-3d-visualization');
-  if (!threeContainer) return;
+  if (!threeContainer) {
+    console.error('About 3D visualization container not found');
+    return;
+  }
+  
+  console.log('Initializing about section 3D visualization');
 
   // Scene setup
   const scene = new THREE.Scene();
