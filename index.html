@@ -889,7 +889,7 @@
       });
 
       // --- Three.js Icons ---
-      function createIcon(canvasId, geometry, color) {
+      function createIcon(canvasId, geometry, color, options = {}) {
         const canvas = document.getElementById(canvasId);
         if (!canvas) return;
         const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
@@ -903,13 +903,115 @@
         const light = new THREE.DirectionalLight(0xffffff, 0.8);
         light.position.set(2, 2, 2);
         scene.add(light);
-        const material = new THREE.MeshStandardMaterial({ color: color });
+
+        let material;
+        if (options.texture) {
+          const loader = new THREE.TextureLoader();
+          const texture = loader.load(options.texture);
+          material = new THREE.MeshBasicMaterial({
+            map: texture,
+            transparent: true,
+            side: THREE.DoubleSide
+          });
+        } else {
+          material = new THREE.MeshStandardMaterial({ color: color });
+        }
+
         const mesh = new THREE.Mesh(geometry, material);
         scene.add(mesh);
+        const speed = options.rotationSpeed !== undefined ? options.rotationSpeed : 0.01;
+
         function animate() {
           requestAnimationFrame(animate);
-          mesh.rotation.x += 0.005;
-          mesh.rotation.y += 0.005;
+// --- Three.js Icons ---
+function createIcon(canvasId, geometry, color, options = {}) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+  const width = canvas.clientWidth, height = canvas.clientHeight;
+  renderer.setSize(width, height);
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+  camera.position.z = 3;
+  scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+  const light = new THREE.DirectionalLight(0xffffff, 0.8);
+  light.position.set(2, 2, 2);
+  scene.add(light);
+
+  // choose mesh material
+  let material;
+  if (options.texture) {
+    const loader = new THREE.TextureLoader();
+    const tex = loader.load(options.texture);
+    material = new THREE.MeshBasicMaterial({ map: tex, transparent: true, side: THREE.DoubleSide });
+  } else {
+    material = new THREE.MeshStandardMaterial({ color: color });
+  }
+
+  const mesh = new THREE.Mesh(geometry, material);
+  scene.add(mesh);
+
+  // animation speed override
+  const speed = options.rotationSpeed ?? 0.01;
+  (function animate() {
+    requestAnimationFrame(animate);
+    mesh.rotation.x += speed;
+    mesh.rotation.y += speed;
+    renderer.render(scene, camera);
+  })();
+}
+
+function createEnvelopeGeometry() {
+  const shape = new THREE.Shape();
+  shape.moveTo(-1, -0.6);
+  shape.lineTo(1, -0.6);
+  shape.lineTo(1, 0.2);
+  shape.lineTo(0, 0.8);
+  shape.lineTo(-1, 0.2);
+  shape.lineTo(-1, -0.6);
+  return new THREE.ExtrudeGeometry(shape, { depth: 0.2, bevelEnabled: false });
+}
+
+function createStarGeometry(radius = 0.8, depth = 0.25) {
+  const shape = new THREE.Shape();
+  for (let i = 0; i < 5; i++) {
+    const a = (i / 5) * Math.PI * 2,
+          b = a + Math.PI / 5;
+    const ox = Math.cos(a) * radius,
+          oy = Math.sin(a) * radius,
+          ix = Math.cos(b) * radius * 0.5,
+          iy = Math.sin(b) * radius * 0.5;
+    i === 0 ? shape.moveTo(ox, oy) : shape.lineTo(ox, oy);
+    shape.lineTo(ix, iy);
+  }
+  shape.closePath();
+  return new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: false });
+}
+
+function createPhoneGeometry(w = 0.7, h = 1.2, r = 0.2, d = 0.25) {
+  const s = new THREE.Shape(),
+        W = w / 2, H = h / 2;
+  s.moveTo(-W + r, -H);
+  s.lineTo(W - r, -H);
+  s.quadraticCurveTo(W, -H, W, -H + r);
+  s.lineTo(W, H - r);
+  s.quadraticCurveTo(W, H, W - r, H);
+  s.lineTo(-W + r, H);
+  s.quadraticCurveTo(-W, H, -W, H - r);
+  s.lineTo(-W, -H + r);
+  s.quadraticCurveTo(-W, -H, -W + r, -H);
+  return new THREE.ExtrudeGeometry(s, { depth: d, bevelEnabled: false });
+}
+
+// actual icon instantiation
+createIcon('icon-linkedin', new THREE.PlaneGeometry(1, 1), null, {
+  texture: 'linkedin.svg',
+  rotationSpeed: 0.003
+});
+createIcon('icon-email',   createEnvelopeGeometry(),      0xffaa00);
+createIcon('icon-phone',   createPhoneGeometry(),         0x4caf50);
+createIcon('icon-project', createStarGeometry(),          0x9c27b0);
+
           renderer.render(scene, camera);
         }
         animate();
@@ -958,7 +1060,7 @@
    }
    }
 
-   createIcon('icon-linkedin', new THREE.BoxGeometry(1, 1, 1),                       0x0a66c2);
+   createIcon('icon-linkedin', new THREE.PlaneGeometry(1, 1), null, { texture: 'linkedin.svg', rotationSpeed: 0.003 });
    createIcon('icon-email',   createEnvelopeGeometry(),                              0xffaa00);
    createIcon('icon-phone',   createPhoneGeometry(), 0x4caf50);
    createIcon('icon-project', createStarGeometry(),                                 0x9c27b0);
@@ -991,7 +1093,7 @@
         return new THREE.ExtrudeGeometry(shape, { depth: depth, bevelEnabled: false });
       }
 
-      createIcon('icon-linkedin', new THREE.BoxGeometry(1, 1, 1), 0x0a66c2);
+      createIcon('icon-linkedin', new THREE.PlaneGeometry(1, 1), null, { texture: 'linkedin.svg', rotationSpeed: 0.003 });
       createIcon('icon-email',   createEnvelopeGeometry(),   0xffaa00);
       createIcon('icon-phone',   createPhoneGeometry(), 0x4caf50);
       createIcon('icon-project', createStarGeometry(),       0x9c27b0);
@@ -1024,7 +1126,7 @@
      return new THREE.ExtrudeGeometry(shape, { depth: depth, bevelEnabled: false });
    }
 
-   createIcon('icon-linkedin', new THREE.BoxGeometry(1, 1, 1),                       0x0a66c2);
+   createIcon('icon-linkedin', new THREE.PlaneGeometry(1, 1), null, { texture: 'linkedin.svg', rotationSpeed: 0.003 });
    createIcon('icon-email',   createEnvelopeGeometry(),                              0xffaa00);
    createIcon('icon-phone',   createPhoneGeometry(), 0x4caf50);
    createIcon('icon-project', createStarGeometry(),                                 0x9c27b0);
