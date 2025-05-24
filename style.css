@@ -578,6 +578,13 @@ section {
   border-radius: 16px;
 }
 
+.skill-icon img.skill-image {
+  width: 60%;
+  height: 60%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
 .skill-title {
   margin-bottom: 1rem;
   font-weight: 700;
@@ -607,12 +614,12 @@ section {
   color: #000;
 }
 
-.project-link i {
+.project-link .arrow {
   margin-left: 0.5rem;
   transition: transform 0.3s ease;
 }
 
-.project-link:hover i {
+.project-link:hover .arrow {
   transform: translateX(4px);
 }
 
@@ -657,6 +664,13 @@ canvas {
   width: 100%;
   height: auto;
   max-height: 400px;
+}
+
+/* Ensure the 3D visualization canvas fits its container */
+#about-3d-visualization canvas {
+  height: 100% !important;
+  width: 100% !important;
+  max-height: none;
 }
 
 /* Experience Section */
