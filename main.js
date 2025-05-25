@@ -8,6 +8,9 @@ const loadingScreen = document.querySelector('.loading-screen');
 const customCursor = document.querySelector('.custom-cursor');
 const navbar = document.querySelector('.navbar');
 
+// Store Chart.js instances to allow reinitialization when the theme changes
+let chartInstances = [];
+
 // Loading animation
 window.addEventListener('load', () => {
   setTimeout(() => {
@@ -106,6 +109,9 @@ function setTheme(theme) {
   } else {
     themeIcon?.classList.replace('fa-sun', 'fa-moon');
   }
+
+  // Reinitialize charts with colors that match the active theme
+  initializeCharts();
 }
 
 // Check for saved theme preference
@@ -123,6 +129,25 @@ themeToggle?.addEventListener('click', () => {
   const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
   setTheme(newTheme);
 });
+
+// Determine chart colors based on the current theme
+function getChartColors() {
+  const currentTheme = document.documentElement.getAttribute('data-theme');
+  if (currentTheme === 'light') {
+    return {
+      text: 'rgba(29, 29, 31, 0.7)',
+      grid: 'rgba(0, 0, 0, 0.1)',
+      tooltipBg: 'rgba(255, 255, 255, 0.9)',
+      tooltipText: '#1d1d1f'
+    };
+  }
+  return {
+    text: 'rgba(255, 255, 255, 0.7)',
+    grid: 'rgba(255, 255, 255, 0.1)',
+    tooltipBg: 'rgba(10, 10, 16, 0.8)',
+    tooltipText: '#ffffff'
+  };
+}
 
 // Initialize Three.js 3D Enhanced Business Metrics Visualization
 function initialize3DVisualization() {
@@ -331,10 +356,17 @@ function initialize3DVisualization() {
 
 // Initialize Charts
 function initializeCharts() {
+  // Destroy existing charts if they exist
+  if (chartInstances.length) {
+    chartInstances.forEach(chart => chart.destroy());
+    chartInstances = [];
+  }
+
+  const colors = getChartColors();
   // Skills Radar Chart
   const skillsRadarChart = document.getElementById('skillsRadarChart')?.getContext('2d');
   if (skillsRadarChart) {
-    new Chart(skillsRadarChart, {
+    const radar = new Chart(skillsRadarChart, {
       type: 'radar',
       data: {
         labels: ['Data Analysis', 'SQL', 'Excel', 'Visio', 'R', 'Tableau', 'Power BI', 'Problem Solving'],
@@ -357,24 +389,24 @@ function initializeCharts() {
           r: {
             angleLines: {
               display: true,
-              color: 'rgba(255, 255, 255, 0.1)'
+              color: colors.grid
             },
             suggestedMin: 0,
             suggestedMax: 100,
             ticks: {
               stepSize: 20,
               backdropColor: 'transparent',
-              color: 'rgba(255, 255, 255, 0.7)'
+              color: colors.text
             },
             grid: {
-              color: 'rgba(255, 255, 255, 0.1)'
+              color: colors.grid
             },
             pointLabels: {
               font: {
                 family: 'Space Grotesk',
                 size: 12
               },
-              color: 'rgba(255, 255, 255, 0.7)'
+              color: colors.text
             }
           }
         },
@@ -382,7 +414,7 @@ function initializeCharts() {
           legend: {
             position: 'bottom',
             labels: {
-              color: 'rgba(255, 255, 255, 0.7)',
+              color: colors.text,
               font: {
                 family: 'Inter',
                 size: 12
@@ -398,12 +430,13 @@ function initializeCharts() {
         maintainAspectRatio: true
       }
     });
+    chartInstances.push(radar);
   }
 
   // Experience Timeline Chart
   const timelineChart = document.getElementById('timelineChart')?.getContext('2d');
   if (timelineChart) {
-    new Chart(timelineChart, {
+    const timeline = new Chart(timelineChart, {
       type: 'line',
       data: {
         labels: ['2003', '2005', '2007', '2009', '2011', '2013', '2015', '2017', '2019', '2021', '2023'],
@@ -432,17 +465,17 @@ function initializeCharts() {
             title: {
               display: true,
               text: 'Skill & Responsibility Level',
-              color: 'rgba(255, 255, 255, 0.7)',
+              color: colors.text,
               font: {
                 family: 'Inter',
                 size: 14
               }
             },
-            grid: {
-              color: 'rgba(255, 255, 255, 0.1)'
+              grid: {
+              color: colors.grid
             },
-            ticks: {
-              color: 'rgba(255, 255, 255, 0.7)',
+              ticks: {
+                color: colors.text,
               font: {
                 family: 'Inter',
                 size: 12
@@ -453,17 +486,17 @@ function initializeCharts() {
             title: {
               display: true,
               text: 'Year',
-              color: 'rgba(255, 255, 255, 0.7)',
+              color: colors.text,
               font: {
                 family: 'Inter',
                 size: 14
               }
             },
-            grid: {
-              color: 'rgba(255, 255, 255, 0.1)'
+              grid: {
+              color: colors.grid
             },
-            ticks: {
-              color: 'rgba(255, 255, 255, 0.7)',
+              ticks: {
+                color: colors.text,
               font: {
                 family: 'Inter',
                 size: 12
@@ -474,8 +507,8 @@ function initializeCharts() {
         plugins: {
           legend: {
             position: 'bottom',
-            labels: {
-              color: 'rgba(255, 255, 255, 0.7)',
+              labels: {
+                color: colors.text,
               font: {
                 family: 'Inter',
                 size: 12
@@ -516,7 +549,9 @@ function initializeCharts() {
                 return label;
               }
             },
-            backgroundColor: 'rgba(10, 10, 16, 0.8)',
+            backgroundColor: colors.tooltipBg,
+            titleColor: colors.tooltipText,
+            bodyColor: colors.tooltipText,
             titleFont: {
               family: 'Space Grotesk',
               size: 14
@@ -538,12 +573,13 @@ function initializeCharts() {
         maintainAspectRatio: true
       }
     });
+    chartInstances.push(timeline);
   }
 
   // Project Impact Chart
   const impactChart = document.getElementById('impactChart')?.getContext('2d');
   if (impactChart) {
-    new Chart(impactChart, {
+    const impact = new Chart(impactChart, {
       type: 'bar',
       data: {
         labels: ['Process Improvement', 'Repeat Calls Reduction', 'Excel-Visio Integration', 'Data Analysis'],
@@ -581,17 +617,17 @@ function initializeCharts() {
             title: {
               display: true,
               text: 'Impact Score',
-              color: 'rgba(255, 255, 255, 0.7)',
+              color: colors.text,
               font: {
                 family: 'Inter',
                 size: 14
               }
             },
-            grid: {
-              color: 'rgba(255, 255, 255, 0.1)'
+              grid: {
+                color: colors.grid
             },
-            ticks: {
-              color: 'rgba(255, 255, 255, 0.7)',
+              ticks: {
+                color: colors.text,
               font: {
                 family: 'Inter',
                 size: 12
@@ -603,7 +639,7 @@ function initializeCharts() {
               display: false
             },
             ticks: {
-              color: 'rgba(255, 255, 255, 0.7)',
+              color: colors.text,
               font: {
                 family: 'Inter',
                 size: 12
@@ -616,7 +652,9 @@ function initializeCharts() {
             display: false
           },
           tooltip: {
-            backgroundColor: 'rgba(10, 10, 16, 0.8)',
+            backgroundColor: colors.tooltipBg,
+            titleColor: colors.tooltipText,
+            bodyColor: colors.tooltipText,
             titleFont: {
               family: 'Space Grotesk',
               size: 14
@@ -638,6 +676,7 @@ function initializeCharts() {
         maintainAspectRatio: true
       }
     });
+    chartInstances.push(impact);
   }
 }
 
