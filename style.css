@@ -367,7 +367,7 @@ header::before {
   z-index: 1000;
   padding: 1rem 0;
   backdrop-filter: blur(10px);
-  background: rgba(20, 60, 100, 0.85);
+  background: rgba(255, 255, 255, 0.8);
   border-bottom: 2px solid var(--accent-color);
   box-shadow: 0 3px 20px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
@@ -375,7 +375,15 @@ header::before {
 
 .navbar.scrolled {
   padding: 0.7rem 0;
-  background: rgba(20, 42, 66, 0.98);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+[data-theme="dark"] .navbar {
+  background: rgba(18, 18, 18, 0.8);
+}
+
+[data-theme="dark"] .navbar.scrolled {
+  background: rgba(18, 18, 18, 0.95);
 }
 
 .navbar-container {
