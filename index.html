@@ -997,7 +997,7 @@ function createPhoneGeometry(w=0.7,h=1.2,r=0.2,dep=0.25) {
 createIcon('icon-linkedin', new THREE.PlaneGeometry(1,1), null, { texture:'linkedin.svg', rotationSpeed:0.003 });
 createIcon('icon-email',   createEnvelopeGeometry(),      0xffaa00);
 createIcon('icon-phone',   createPhoneGeometry(),         0x4caf50);
-createIcon('icon-project', createStarGeometry(),          0x9c27b0);
+createIcon('icon-project', createFolderGeometry(),          0x9c27b0);
 
           renderer.render(scene, camera);
         }
