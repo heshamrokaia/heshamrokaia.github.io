@@ -113,8 +113,8 @@ const savedTheme = localStorage.getItem('theme');
 if (savedTheme) {
   setTheme(savedTheme);
 } else {
-  // Default to dark mode
-  setTheme('dark');
+  // Default to light mode
+  setTheme('light');
 }
 
 // Theme toggle event listener
