@@ -15,7 +15,7 @@ window.addEventListener('load', () => {
     initializeScrollAnimation();
     initializeCharts();
     initialize3DVisualization();
-  }, 1500);
+  }, 500);
 });
 
 // Custom cursor
@@ -57,7 +57,7 @@ function initializeScrollAnimation() {
         observer.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.2 });
+  }, { threshold: 0.1 });
   
   fadeElements.forEach(element => {
     observer.observe(element);

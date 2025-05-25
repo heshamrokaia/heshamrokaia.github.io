@@ -1178,7 +1178,7 @@ footer {
 .fade-in {
   opacity: 0;
   transform: translateY(30px);
-  transition: opacity 1s ease, transform 1s ease;
+  transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
 .fade-in.active {
@@ -1189,7 +1189,7 @@ footer {
 .slide-in-left {
   opacity: 0;
   transform: translateX(-50px);
-  transition: opacity 1s ease, transform 1s ease;
+  transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
 .slide-in-left.active {
@@ -1200,7 +1200,7 @@ footer {
 .slide-in-right {
   opacity: 0;
   transform: translateX(50px);
-  transition: opacity 1s ease, transform 1s ease;
+  transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
 .slide-in-right.active {
@@ -1214,28 +1214,28 @@ footer {
 }
 
 .stagger-item.active {
-  animation: fadeIn 0.6s forwards;
+  animation: fadeIn 0.3s forwards;
 }
 
 /* Transitions */
 .transition-delay-1 {
-  transition-delay: 0.2s;
+  transition-delay: 0.1s;
 }
 
 .transition-delay-2 {
-  transition-delay: 0.4s;
+  transition-delay: 0.2s;
 }
 
 .transition-delay-3 {
-  transition-delay: 0.6s;
+  transition-delay: 0.3s;
 }
 
 .transition-delay-4 {
-  transition-delay: 0.8s;
+  transition-delay: 0.4s;
 }
 
 .transition-delay-5 {
-  transition-delay: 1s;
+  transition-delay: 0.5s;
 }
 
 /* 3D Effect */
