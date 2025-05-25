@@ -19,12 +19,24 @@ window.addEventListener('load', () => {
 });
 
 // Custom cursor
+// Improve cursor performance by throttling updates with requestAnimationFrame
+let cursorX = 0;
+let cursorY = 0;
+
 document.addEventListener('mousemove', (e) => {
-  if (customCursor) {
-    customCursor.style.left = `${e.clientX}px`;
-    customCursor.style.top = `${e.clientY}px`;
-  }
+  cursorX = e.clientX;
+  cursorY = e.clientY;
 });
+
+function updateCustomCursor() {
+  if (customCursor) {
+    customCursor.style.left = `${cursorX}px`;
+    customCursor.style.top = `${cursorY}px`;
+  }
+  requestAnimationFrame(updateCustomCursor);
+}
+
+requestAnimationFrame(updateCustomCursor);
 
 document.addEventListener('mousedown', () => {
   customCursor?.classList.add('active');
