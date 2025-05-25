@@ -350,7 +350,7 @@ header::before {
 }
 
 .social-icons a:hover {
-  color: white;
+  color: var(--secondary-color);
   transform: translateY(-5px);
 }
 
@@ -795,7 +795,7 @@ canvas {
 
 .timeline-title {
   margin-bottom: 1rem;
-  color: white;
+  color: var(--text-color);
 }
 
 .timeline-description ul {

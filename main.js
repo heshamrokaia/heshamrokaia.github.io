@@ -203,8 +203,9 @@ function initialize3DVisualization() {
     canvas.width = 256;
     canvas.height = 128;
     const context = canvas.getContext('2d');
-    
-    context.fillStyle = '#ffffff';
+
+    const labelColor = getComputedStyle(document.documentElement).getPropertyValue('--text-color').trim() || '#000';
+    context.fillStyle = labelColor;
     context.font = 'Bold 24px Arial';
     context.fillText(metric.label, 10, 64);
     context.fillStyle = 'rgba(200, 155, 60, 0.8)';

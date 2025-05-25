@@ -589,7 +589,8 @@
           canvas.width = 128;
           canvas.height = 64;
           const context = canvas.getContext('2d');
-          context.fillStyle = '#ffffff';
+          const labelColor = getComputedStyle(document.documentElement).getPropertyValue('--text-color').trim() || '#000';
+          context.fillStyle = labelColor;
           context.font = '24px Arial, sans-serif';
           context.fillText(text, 10, 30);
           
