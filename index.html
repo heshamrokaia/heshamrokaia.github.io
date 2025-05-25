@@ -1085,41 +1085,6 @@
         fogDensity: 0.06
       });
 
-      // --- Three.js Icons ---
-      function createIcon(canvasId, geometry, color, options = {}) {
-        const canvas = document.getElementById(canvasId);
-        if (!canvas) return;
-        const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
-        const width = canvas.clientWidth;
-        const height = canvas.clientHeight;
-        renderer.setSize(width, height);
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
-        camera.position.z = 3;
-        scene.add(new THREE.AmbientLight(0xffffff, 0.6));
-        const light = new THREE.DirectionalLight(0xffffff, 0.8);
-        light.position.set(2, 2, 2);
-        scene.add(light);
-
-        let material;
-        if (options.texture) {
-          const loader = new THREE.TextureLoader();
-          const texture = loader.load(options.texture);
-          material = new THREE.MeshBasicMaterial({
-            map: texture,
-            transparent: true,
-            side: THREE.DoubleSide
-          });
-        } else {
-          material = new THREE.MeshStandardMaterial({ color: color });
-        }
-
-        const mesh = new THREE.Mesh(geometry, material);
-        scene.add(mesh);
-        const speed = options.rotationSpeed !== undefined ? options.rotationSpeed : 0.01;
-
-        function animate() {
-          requestAnimationFrame(animate);
 // --- Three.js Icons ---
 function createIcon(canvasId, geometry, color, options = {}) {
   const canvas = document.getElementById(canvasId);
@@ -1128,14 +1093,13 @@ function createIcon(canvasId, geometry, color, options = {}) {
   const width = canvas.clientWidth, height = canvas.clientHeight;
   renderer.setSize(width, height);
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(45, width/height, 0.1, 100);
+  const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
   camera.position.z = 3;
   scene.add(new THREE.AmbientLight(0xffffff, 0.6));
   const light = new THREE.DirectionalLight(0xffffff, 0.8);
-  light.position.set(2,2,2);
+  light.position.set(2, 2, 2);
   scene.add(light);
 
-  // choose material
   let material;
   if (options.texture) {
     const tex = new THREE.TextureLoader().load(options.texture);
@@ -1157,170 +1121,64 @@ function createIcon(canvasId, geometry, color, options = {}) {
 }
 
 function createEnvelopeGeometry() {
-  const s = new THREE.Shape();
-  s.moveTo(-1,-0.6); s.lineTo(1,-0.6);
-  s.lineTo(1,0.2);  s.lineTo(0,0.8);
-  s.lineTo(-1,0.2); s.lineTo(-1,-0.6);
-  return new THREE.ExtrudeGeometry(s, { depth:0.2, bevelEnabled:false });
+  const shape = new THREE.Shape();
+  shape.moveTo(-1, -0.6);
+  shape.lineTo(1, -0.6);
+  shape.lineTo(1, 0.2);
+  shape.lineTo(0, 0.8);
+  shape.lineTo(-1, 0.2);
+  shape.lineTo(-1, -0.6);
+  return new THREE.ExtrudeGeometry(shape, { depth: 0.2, bevelEnabled: false });
 }
 
-function createStarGeometry(r=0.8,d=0.25) {
-  const s = new THREE.Shape();
-  for (let i=0;i<5;i++){
-    const a=i/5*Math.PI*2, b=a+Math.PI/5;
-    const ox=Math.cos(a)*r, oy=Math.sin(a)*r;
-    const ix=Math.cos(b)*r*0.5, iy=Math.sin(b)*r*0.5;
-    i===0?s.moveTo(ox,oy):s.lineTo(ox,oy);
-    s.lineTo(ix,iy);
-  }
-  s.closePath();
-  return new THREE.ExtrudeGeometry(s, { depth:d, bevelEnabled:false });
+function createFolderGeometry() {
+  const shape = new THREE.Shape();
+  shape.moveTo(-1, -0.4);
+  shape.lineTo(-0.2, -0.4);
+  shape.lineTo(0, -0.2);
+  shape.lineTo(1, -0.2);
+  shape.lineTo(1, 0.6);
+  shape.lineTo(-1, 0.6);
+  shape.lineTo(-1, -0.4);
+  return new THREE.ExtrudeGeometry(shape, { depth: 0.25, bevelEnabled: false });
 }
 
-function createPhoneGeometry(w=0.7,h=1.2,r=0.2,dep=0.25) {
-  const s=new THREE.Shape(), W=w/2, H=h/2;
-  s.moveTo(-W+r,-H).lineTo(W-r,-H)
-   .quadraticCurveTo(W,-H,W,-H+r)
-   .lineTo(W,H-r)
-   .quadraticCurveTo(W,H,W-r,H)
-   .lineTo(-W+r,H)
-   .quadraticCurveTo(-W,H,-W,H-r)
-   .lineTo(-W,-H+r)
-   .quadraticCurveTo(-W,-H,-W+r,-H);
-  return new THREE.ExtrudeGeometry(s, { depth:dep, bevelEnabled:false });
+function createStarGeometry(radius = 0.8, depth = 0.25) {
+  const shape = new THREE.Shape();
+  for (let i = 0; i < 5; i++) {
+    const outerAngle = (i / 5) * Math.PI * 2;
+    const innerAngle = outerAngle + Math.PI / 5;
+    const outerX = Math.cos(outerAngle) * radius;
+    const outerY = Math.sin(outerAngle) * radius;
+    const innerX = Math.cos(innerAngle) * radius * 0.5;
+    const innerY = Math.sin(innerAngle) * radius * 0.5;
+    if (i === 0) shape.moveTo(outerX, outerY);
+    else shape.lineTo(outerX, outerY);
+    shape.lineTo(innerX, innerY);
+  }
+  shape.closePath();
+  return new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: false });
 }
 
-// instantiate icons
-createIcon('icon-linkedin', new THREE.PlaneGeometry(1,1), null, { texture:'linkedin.svg', rotationSpeed:0.003 });
-createIcon('icon-email',   createEnvelopeGeometry(),      0xffaa00);
-createIcon('icon-phone',   createPhoneGeometry(),         0x4caf50);
-createIcon('icon-project', createFolderGeometry(),          0x9c27b0);
+function createPhoneGeometry(width = 0.7, height = 1.2, radius = 0.2, depth = 0.25) {
+  const w = width, h = height, r = radius;
+  const shape = new THREE.Shape();
+  shape.moveTo(-w/2 + r, -h/2);
+  shape.lineTo(w/2 - r, -h/2);
+  shape.quadraticCurveTo(w/2, -h/2, w/2, -h/2 + r);
+  shape.lineTo(w/2, h/2 - r);
+  shape.quadraticCurveTo(w/2, h/2, w/2 - r, h/2);
+  shape.lineTo(-w/2 + r, h/2);
+  shape.quadraticCurveTo(-w/2, h/2, -w/2, h/2 - r);
+  shape.lineTo(-w/2, -h/2 + r);
+  shape.quadraticCurveTo(-w/2, -h/2, -w/2 + r, -h/2);
+  return new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: false });
+}
 
-          renderer.render(scene, camera);
-        }
-        animate();
-      }
-
-   // --- Three.js Icons ---
-  function createEnvelopeGeometry() {
-     const shape = new THREE.Shape();
-     shape.moveTo(-1, -0.6);
-     shape.lineTo(1, -0.6);
-     shape.lineTo(1, 0.2);
-     shape.lineTo(0, 0.8);
-     shape.lineTo(-1, 0.2);
-     shape.lineTo(-1, -0.6);
-     return new THREE.ExtrudeGeometry(shape, { depth: 0.2, bevelEnabled: false });
-  }
-
-  function createFolderGeometry() {
-    const shape = new THREE.Shape();
-    shape.moveTo(-1, -0.4);
-    shape.lineTo(-0.2, -0.4);
-    shape.lineTo(0, -0.2);
-    shape.lineTo(1, -0.2);
-    shape.lineTo(1, 0.6);
-    shape.lineTo(-1, 0.6);
-    shape.lineTo(-1, -0.4);
-    return new THREE.ExtrudeGeometry(shape, { depth: 0.25, bevelEnabled: false });
-  }
-
-   function createStarGeometry(radius = 0.8, depth = 0.25) {
-     const shape = new THREE.Shape();
-     for (let i = 0; i < 5; i++) {
-       const outerAngle = (i / 5) * Math.PI * 2;
-       const innerAngle = outerAngle + Math.PI / 5;
-       const outerX = Math.cos(outerAngle) * radius;
-       const outerY = Math.sin(outerAngle) * radius;
-       const innerX = Math.cos(innerAngle) * radius * 0.5;
-       const innerY = Math.sin(innerAngle) * radius * 0.5;
-       if (i === 0) shape.moveTo(outerX, outerY);
-       else shape.lineTo(outerX, outerY);
-       shape.lineTo(innerX, innerY);
-     }
-     shape.closePath();
-     return new THREE.ExtrudeGeometry(shape, { depth: depth, bevelEnabled: false });
-   function createPhoneGeometry(width = 0.7, height = 1.2, radius = 0.2, depth = 0.25) {
-     const w = width, h = height, r = radius;
-     const shape = new THREE.Shape();
-     shape.moveTo(-w/2 + r, -h/2);
-     shape.lineTo(w/2 - r, -h/2);
-     shape.quadraticCurveTo(w/2, -h/2, w/2, -h/2 + r);
-     shape.lineTo(w/2, h/2 - r);
-     shape.quadraticCurveTo(w/2, h/2, w/2 - r, h/2);
-     shape.lineTo(-w/2 + r, h/2);
-     shape.quadraticCurveTo(-w/2, h/2, -w/2, h/2 - r);
-     shape.lineTo(-w/2, -h/2 + r);
-     shape.quadraticCurveTo(-w/2, -h/2, -w/2 + r, -h/2);
-     return new THREE.ExtrudeGeometry(shape, { depth: depth, bevelEnabled: false });
-   }
-   }
-
-   createIcon('icon-linkedin', new THREE.PlaneGeometry(1, 1), null, { texture: 'linkedin.svg', rotationSpeed: 0.003 });
-   createIcon('icon-email',   createEnvelopeGeometry(),                              0xffaa00);
-
-      function createEnvelopeGeometry() {
-        const shape = new THREE.Shape();
-        shape.moveTo(-1, -0.6);
-        shape.lineTo(1, -0.6);
-        shape.lineTo(1, 0.2);
-        shape.lineTo(0, 0.8);
-        shape.lineTo(-1, 0.2);
-        shape.lineTo(-1, -0.6);
-        return new THREE.ExtrudeGeometry(shape, { depth: 0.2, bevelEnabled: false });
-      }
-
-      function createStarGeometry(radius = 0.8, depth = 0.25) {
-        const shape = new THREE.Shape();
-        for (let i = 0; i < 5; i++) {
-          const outerAngle = (i / 5) * Math.PI * 2;
-          const innerAngle = outerAngle + Math.PI / 5;
-          const outerX = Math.cos(outerAngle) * radius;
-          const outerY = Math.sin(outerAngle) * radius;
-          const innerX = Math.cos(innerAngle) * radius * 0.5;
-          const innerY = Math.sin(innerAngle) * radius * 0.5;
-          if (i === 0) shape.moveTo(outerX, outerY);
-          else shape.lineTo(outerX, outerY);
-          shape.lineTo(innerX, innerY);
-        }
-        shape.closePath();
-        return new THREE.ExtrudeGeometry(shape, { depth: depth, bevelEnabled: false });
-      }
-
-      createIcon('icon-linkedin', new THREE.PlaneGeometry(1, 1), null, { texture: 'linkedin.svg', rotationSpeed: 0.003 });
-      createIcon('icon-email',   createEnvelopeGeometry(),   0xffaa00);
-
-   // --- Three.js Icons ---
-   function createEnvelopeGeometry() {
-     const shape = new THREE.Shape();
-     shape.moveTo(-1, -0.6);
-     shape.lineTo(1, -0.6);
-     shape.lineTo(1, 0.2);
-     shape.lineTo(0, 0.8);
-     shape.lineTo(-1, 0.2);
-     shape.lineTo(-1, -0.6);
-     return new THREE.ExtrudeGeometry(shape, { depth: 0.2, bevelEnabled: false });
-   }
-
-   function createStarGeometry(radius = 0.8, depth = 0.25) {
-     const shape = new THREE.Shape();
-     for (let i = 0; i < 5; i++) {
-       const outerAngle = (i / 5) * Math.PI * 2;
-       const innerAngle = outerAngle + Math.PI / 5;
-       const outerX = Math.cos(outerAngle) * radius;
-       const outerY = Math.sin(outerAngle) * radius;
-       const innerX = Math.cos(innerAngle) * radius * 0.5;
-       const innerY = Math.sin(innerAngle) * radius * 0.5;
-       if (i === 0) shape.moveTo(outerX, outerY);
-       else shape.lineTo(outerX, outerY);
-       shape.lineTo(innerX, innerY);
-     }
-     shape.closePath();
-     return new THREE.ExtrudeGeometry(shape, { depth: depth, bevelEnabled: false });
-   }
-
-   createIcon('icon-linkedin', new THREE.PlaneGeometry(1, 1), null, { texture: 'linkedin.svg', rotationSpeed: 0.003 });
-   createIcon('icon-email',   createEnvelopeGeometry(),                              0xffaa00);
+createIcon('icon-linkedin', new THREE.PlaneGeometry(1, 1), null, { texture: 'linkedin.svg', rotationSpeed: 0.003 });
+createIcon('icon-email', createEnvelopeGeometry(), 0xffaa00);
+createIcon('icon-phone', createPhoneGeometry(), 0x4caf50);
+createIcon('icon-project', createFolderGeometry(), 0x9c27b0);
       
       console.log('Visualizations created:', 
         mainViz ? 'Main visualization success' : 'Main visualization failed', 
