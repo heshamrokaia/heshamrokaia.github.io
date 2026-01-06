@@ -25,7 +25,12 @@
   <nav class="navbar">
     <div class="container navbar-container">
       <a href="#" class="navbar-logo">Hesham Abourokaia</a>
-      <ul class="navbar-menu">
+      <button class="navbar-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navbar-menu">
+        <span class="navbar-toggle-bar"></span>
+        <span class="navbar-toggle-bar"></span>
+        <span class="navbar-toggle-bar"></span>
+      </button>
+      <ul class="navbar-menu" id="navbar-menu">
         <li><a href="#about">About</a></li>
         <li><a href="#skills">Skills</a></li>
         <li><a href="#experience">Experience</a></li>
@@ -61,7 +66,9 @@
         <div class="profile-container slide-in-right active">
           <!-- Image placeholder with note -->
           <div class="profile-img-wrapper tilt-element" style="display: flex; justify-content: center; align-items: center; background: rgb(20, 39, 61); transform: perspective(1000px) rotateX(0deg) rotateY(0deg);">
-            <div id="profile-visualization" style="width: 100%; height: 180px;"></div>
+            <div id="profile-visualization" class="profile-visualization" style="width: 100%; height: 180px;">
+              <img src="./dashboard-7559210_960_720.png" alt="Data visualization preview" class="profile-fallback">
+            </div>
           </div>
           <div class="profile-background"></div>
           <div class="profile-glow"></div>
@@ -729,6 +736,7 @@
         renderer.setClearColor(0x0d1b2a, 1);
         renderer.setPixelRatio(window.devicePixelRatio);
         container.appendChild(renderer.domElement);
+        container.classList.add('is-ready');
         
         // Lighting
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);

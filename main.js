@@ -7,6 +7,8 @@ const body = document.body;
 const loadingScreen = document.querySelector('.loading-screen');
 const customCursor = document.querySelector('.custom-cursor');
 const navbar = document.querySelector('.navbar');
+const navToggle = document.querySelector('.navbar-toggle');
+const navbarMenu = document.querySelector('.navbar-menu');
 
 // Store Chart.js instances to allow reinitialization when the theme changes
 let chartInstances = [];
@@ -25,6 +27,11 @@ window.addEventListener('load', () => {
 // Improve cursor performance by throttling updates with requestAnimationFrame
 let cursorX = 0;
 let cursorY = 0;
+const supportsCustomCursor = !!customCursor && !window.matchMedia('(hover: none), (pointer: coarse)').matches;
+
+if (!supportsCustomCursor) {
+  customCursor?.remove();
+}
 
 document.addEventListener('mousemove', (e) => {
   cursorX = e.clientX;
@@ -32,7 +39,7 @@ document.addEventListener('mousemove', (e) => {
 });
 
 function updateCustomCursor() {
-  if (customCursor) {
+  if (supportsCustomCursor && customCursor) {
     customCursor.style.left = `${cursorX}px`;
     customCursor.style.top = `${cursorY}px`;
   }
@@ -41,13 +48,15 @@ function updateCustomCursor() {
 
 requestAnimationFrame(updateCustomCursor);
 
-document.addEventListener('mousedown', () => {
-  customCursor?.classList.add('active');
-});
+if (supportsCustomCursor) {
+  document.addEventListener('mousedown', () => {
+    customCursor?.classList.add('active');
+  });
 
-document.addEventListener('mouseup', () => {
-  customCursor?.classList.remove('active');
-});
+  document.addEventListener('mouseup', () => {
+    customCursor?.classList.remove('active');
+  });
+}
 
 // Intersection Observer for scroll animations
 function initializeScrollAnimation() {
@@ -97,6 +106,23 @@ window.addEventListener('scroll', () => {
   } else {
     navbar?.classList.remove('scrolled');
   }
+});
+
+// Mobile navigation toggle
+function setMenuState(isOpen) {
+  if (!navbarMenu || !navToggle) return;
+  navbarMenu.classList.toggle('open', isOpen);
+  navToggle.classList.toggle('is-active', isOpen);
+  navToggle.setAttribute('aria-expanded', String(isOpen));
+}
+
+navToggle?.addEventListener('click', () => {
+  const isOpen = navbarMenu?.classList.contains('open');
+  setMenuState(!isOpen);
+});
+
+navbarMenu?.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => setMenuState(false));
 });
 
 // Theme switcher functionality
